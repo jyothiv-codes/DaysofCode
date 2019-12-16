@@ -30,8 +30,6 @@ df.columns
 print(df.isnull().sum())
 
 
-# In[107]:
-
 
 male=0
 female=0
