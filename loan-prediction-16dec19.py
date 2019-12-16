@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
+# In[199]:
 
 
 import pandas as pd
@@ -11,24 +11,26 @@ import matplotlib.pyplot as plt
  
 
 
-# In[104]:
+# In[200]:
 
 
 df = pd.read_csv("train.csv")
 print(df.head(3))
 
 
-# In[105]:
+# In[201]:
 
 
 df.columns
 
 
-# In[106]:
+# In[202]:
 
 
 print(df.isnull().sum())
 
+
+# In[203]:
 
 
 male=0
@@ -45,7 +47,7 @@ else:
     df['Gender']=df['Gender'].fillna("Female")
 
 
-# In[108]:
+# In[204]:
 
 
 married=0
@@ -62,7 +64,7 @@ else:
     df['Married']=df['Married'].fillna("No")
 
 
-# In[109]:
+# In[205]:
 
 
 df.loc[df.Dependents=="3+","Dependents"]=3
@@ -71,7 +73,7 @@ d={}
 
 
 
-# In[110]:
+# In[206]:
 
 
 for i in range(len(df['Dependents'])):
@@ -82,19 +84,19 @@ for i in range(len(df['Dependents'])):
 print(d)
 
 
-# In[111]:
+# In[207]:
 
 
 df['Dependents']=df['Dependents'].fillna(0)
 
 
-# In[112]:
+# In[208]:
 
 
 df['Self_Employed'].unique()
 
 
-# In[113]:
+# In[209]:
 
 
 self=0
@@ -111,23 +113,32 @@ else:
     df['Self_Employed']=df['Self_Employed'].fillna("No")
 
 
-# In[114]:
+# In[210]:
 
 
 df['Self_Employed'].unique()
 
 
-# In[115]:
+# In[211]:
 
 
 df.columns
 
 
-# In[116]:
+# In[212]:
 
 
 df.isnull().sum()
+
+
+# In[213]:
+
+
 df['LoanAmount'].unique()
+
+
+# In[214]:
+
 
 from statistics import mean
 m=0
@@ -143,19 +154,19 @@ m=s/n
 print(m)
 
 
-# In[119]:
+# In[215]:
 
 
 df['LoanAmount']=df['LoanAmount'].fillna(m)
 
 
-# In[120]:
+# In[216]:
 
 
 df['LoanAmount'].unique()
 
 
-# In[121]:
+# In[217]:
 
 
 
@@ -173,13 +184,13 @@ m=s/n
 print(m)
 
 
-# In[122]:
+# In[218]:
 
 
 df['Loan_Amount_Term']=df['Loan_Amount_Term'].fillna(m)
 
 
-# In[123]:
+# In[219]:
 
 
 
@@ -198,26 +209,101 @@ print(m)
 df['Credit_History']=df['Credit_History'].fillna(m)
 
 
-# In[124]:
+# In[220]:
 
 
 df.isnull().sum()
 
 
-# In[125]:
+# In[221]:
+
+
+from matplotlib import pyplot as plt
+import seaborn as sns
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import scipy.stats as ss
+import itertools
+
+
+# In[222]:
+
+
+def cramers_corrected_stat(confusion_matrix):
+    """ calculate Cramers V statistic for categorical-categorical association.
+        uses correction from Bergsma and Wicher, 
+        Journal of the Korean Statistical Society 42 (2013): 323-328
+    """
+    chi2 = ss.chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum().sum()
+    phi2 = chi2/n
+    r,k = confusion_matrix.shape
+    phi2corr = max(0, phi2 - ((k-1)*(r-1))/(n-1))    
+    rcorr = r - ((r-1)**2)/(n-1)
+    kcorr = k - ((k-1)**2)/(n-1)
+    return np.sqrt(phi2corr / min( (kcorr-1), (rcorr-1)))
+
+
+# In[223]:
+
+
+cols = ["Gender", "Married", "Education","Self_Employed","Loan_Status","Property_Area"]
+corrM = np.zeros((len(cols),len(cols)))
+import itertools
+# there's probably a nice pandas way to do this
+for col1, col2 in itertools.combinations(cols, 2):
+    idx1, idx2 = cols.index(col1), cols.index(col2)
+    corrM[idx1, idx2] = cramers_corrected_stat(pd.crosstab(df[col1], df[col2]))
+    corrM[idx2, idx1] = corrM[idx1, idx2]
+
+
+# In[224]:
+
+
+corr = pd.DataFrame(corrM, index=cols, columns=cols)
+fig, ax = plt.subplots(figsize=(7, 6))
+ax = sns.heatmap(corr, annot=True, ax=ax); ax.set_title("Cramer V Correlation between Variables");
+
+
+# In[ ]:
+
+
+
+
+
+# In[225]:
 
 
 df.loc[df.Loan_Status=="N","Loan_Status"]="1"
 df.loc[df.Loan_Status=="Y","Loan_Status"]="0"
 
 
-# In[126]:
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[226]:
 
 
 df.columns
 
 
-# In[127]:
+# In[227]:
 
 
 import pandas as pd
@@ -227,7 +313,22 @@ df = df.drop('Property_Area',axis = 1)
 df = df.join(one_hot)
 print(one_hot.columns)
 print(one_hot.head(3))
+
+
+# In[228]:
+
+
 df.columns
+
+
+# In[229]:
+
+
+df=df.drop(['Gender','Self_Employed'],axis=1)
+
+
+# In[230]:
+
 
 import pandas as pd
 
@@ -238,7 +339,7 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[130]:
+# In[231]:
 
 
 df.columns
@@ -250,7 +351,7 @@ df.columns
 
 
 
-# In[131]:
+# In[232]:
 
 
 import pandas as pd
@@ -262,14 +363,14 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[132]:
+# In[233]:
 
 
 df.loc[df.Married=="No","Married"]="1m"
 df.loc[df.Married=="Yes","Married"]="0m"
 
 
-# In[133]:
+# In[234]:
 
 
 import pandas as pd
@@ -281,7 +382,7 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[134]:
+# In[235]:
 
 
 import pandas as pd
@@ -299,31 +400,37 @@ print(one_hot.head(3))
 
 
 
-# In[135]:
+# In[236]:
 
 
 df.columns
 
 
-# In[136]:
+# In[237]:
 
 
 df.head(3)
 
 
-# In[190]:
+# In[238]:
 
 
 test=pd.read_csv("test_lAUu6dG.csv")
 
 
-# In[191]:
+# In[239]:
 
 
 test.isnull().sum()
 
 
-# In[192]:
+# In[240]:
+
+
+test=test.drop(['Gender','Self_Employed'],axis=1)
+
+
+# In[241]:
 
 
 #test=test.dropna()
@@ -341,7 +448,7 @@ else:
     test['Gender']=test['Gender'].fillna("Female")
 
 
-# In[193]:
+# In[242]:
 
 
 married=0
@@ -359,7 +466,7 @@ else:
 
 
 
-# In[194]:
+# In[243]:
 
 
 test.loc[test.Dependents=="3+","Dependents"]=3
@@ -378,14 +485,14 @@ print(d)
 
 
 
-# In[195]:
+# In[244]:
 
 
 
 test['Dependents']=test['Dependents'].fillna(0)
 
 
-# In[196]:
+# In[245]:
 
 
 self=0
@@ -403,7 +510,7 @@ else:
 
 
 
-# In[197]:
+# In[246]:
 
 
 from statistics import mean
@@ -420,14 +527,14 @@ m=s/n
 print(m)
 
 
-# In[198]:
+# In[247]:
 
 
 
 test['LoanAmount']=test['LoanAmount'].fillna(m)
 
 
-# In[199]:
+# In[248]:
 
 
 from statistics import mean
@@ -449,7 +556,7 @@ test['Loan_Amount_Term']=test['Loan_Amount_Term'].fillna(m)
 
 
 
-# In[200]:
+# In[249]:
 
 
 from statistics import mean
@@ -467,19 +574,39 @@ print(m)
 test['Credit_History']=test['Credit_History'].fillna(m)
 
 
+# In[250]:
+
+
+df.dtypes
+
+
 # In[ ]:
 
 
 
 
 
-# In[ ]:
+# In[251]:
 
 
+x_train = df.drop('Loan_Status', axis=1)
+x_train=x_train.drop('Loan_ID',axis=1)
+y_train = df['Loan_Status']
 
 
+# In[252]:
 
-# In[201]:
+
+import pandas as pd
+from sklearn import preprocessing
+
+x = x_train.values #returns a numpy array
+min_max_scaler = preprocessing.MinMaxScaler()
+x_scaled = min_max_scaler.fit_transform(x)
+x_train = pd.DataFrame(x_scaled)
+
+
+# In[168]:
 
 
 from sklearn import datasets
@@ -493,15 +620,13 @@ from sklearn.naive_bayes import GaussianNB
 
 
 
-# In[202]:
+# In[ ]:
 
 
-x_train = df.drop('Loan_Status', axis=1)
-x_train=x_train.drop('Loan_ID',axis=1)
-y_train = df['Loan_Status']
 
 
-# In[203]:
+
+# In[169]:
 
 
 model = GaussianNB()
@@ -510,63 +635,59 @@ model.fit(x_train,y_train)
 print(model)
 
 
-# In[204]:
+# In[253]:
+
+
+###After dropping columns based on correlation matrix
+
+
+"""from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix,accuracy_score,precision_score,recall_score,r2_score,mean_absolute_error
+
+model = LogisticRegression()
+model.fit(x_train, y_train)
+ """
+
+
+# In[254]:
 
 
 submission=pd.read_csv("sample_submission_49d68Cx.csv")
 
 
-# In[ ]:
-
-
-submission['Loan_Status']=pred_test 
-submission['Loan_ID']=test_original['Loan_ID']
-
-
-# In[ ]:
-
-
-submission['Loan_Status'].replace(0, 'N',inplace=True)
-submission['Loan_Status'].replace(1, 'Y',inplace=True)
-
-
-# In[ ]:
-
-
-pd.DataFrame(submission, columns=['Loan_ID','Loan_Status']).to_csv('logistic.csv')
-
-
-# In[205]:
+# In[255]:
 
 
 copy=test
 
 
-# In[206]:
+# In[256]:
 
 
 dfans=copy['Loan_ID']
 
 
-# In[207]:
+# In[257]:
 
 
 copy.head(3)
 
 
-# In[208]:
+# In[258]:
 
 
 print(test.isnull().sum())
 
 
-# In[217]:
+# In[259]:
 
 
 test=test.drop('Loan_ID',axis=1)
 
 
-# In[209]:
+# In[260]:
 
 
 import pandas as pd
@@ -578,7 +699,7 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[210]:
+# In[261]:
 
 
 import pandas as pd
@@ -590,7 +711,7 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[211]:
+# In[262]:
 
 
 import pandas as pd
@@ -602,14 +723,14 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[212]:
+# In[263]:
 
 
 test.loc[test.Married=="No","Married"]="1m"
 test.loc[test.Married=="Yes","Married"]="0m"
 
 
-# In[213]:
+# In[264]:
 
 
 import pandas as pd
@@ -621,7 +742,7 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[214]:
+# In[265]:
 
 
 import pandas as pd
@@ -633,74 +754,112 @@ print(one_hot.columns)
 print(one_hot.head(3))
 
 
-# In[215]:
+# In[266]:
 
 
 test.loc[test.Dependents=="3+","Dependents"]="3"
 
 
-# In[218]:
+# In[267]:
 
 
 predicted = model.predict(test)
 
 
-# In[219]:
+# In[268]:
 
 
 print(predicted)
 
 
-# In[220]:
+# In[269]:
 
 
 predicted.shape
 
 
-# In[221]:
+# In[270]:
 
 
 test.shape
 
 
-# In[222]:
+# In[271]:
 
 
 submission.shape
 
 
-# In[223]:
+# In[272]:
 
 
 submission=submission.iloc[0:0]
 
 
+# In[273]:
+
 
 submission.shape
+
+
+# In[274]:
+
+
 print(submission)
+
+
+# In[275]:
+
+
+#submission['Loan_Status'].replace(0, 'N',inplace=True)
+#submission['Loan_Status'].replace(1, 'Y',inplace=True)
 print(dfans)
+
+
+# In[276]:
+
+
 pd.DataFrame(submission, columns=['Loan_ID','Loan_Status']).to_csv('logistic.csv')
+
+
+# In[277]:
+
+
 print(copy.head(3))
+
+
+# In[278]:
+
+
 submission['Loan_ID']=dfans
 
+
+# In[279]:
+
+
 submission['Loan_Status']=predicted 
+
+
+# In[280]:
+
 
 submission.loc[submission.Loan_Status=='0',"Loan_Status"]="N"
 submission.loc[submission.Loan_Status=='1',"Loan_Status"]="Y"
 
 
-
-
-
-submission['Loan_Status']=submission['Loan_Status'].replace(0, 'N',inplace=True)
-submission['Loan_Status']=submission['Loan_Status'].replace(1, 'Y',inplace=True)
-
+# In[281]:
 
 
 submission['Loan_Status']
 
 
+# In[282]:
+
+
 pd.DataFrame(submission, columns=['Loan_ID','Loan_Status']).to_csv('logistics.csv')
+
+
+# In[ ]:
 
 
 
