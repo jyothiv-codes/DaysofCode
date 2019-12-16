@@ -6,5 +6,6 @@ Day 1
 
 
 Day 2
-3. Python- Analytics Vidhya : Practice Problem Loan Prediction III
+
+3. Python- Analytics Vidhya : Practice Problem Loan Prediction III - Score (0.243055)
 
