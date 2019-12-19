@@ -12,3 +12,6 @@ Day 3
 
 Day 4
 5. Python- Analytics Vidhya : Practice Problem Predict number of upvotes - RMSE: 4157.61
+
+Day 5
+6. Python- Analytics Vidhya : Practice Problem HR Analytics - F1 Score: 0.238538435022406
