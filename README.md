@@ -15,3 +15,6 @@ Day 4
 
 Day 5
 6. Python- Analytics Vidhya : Practice Problem HR Analytics - F1 Score: 0.238538435022406
+
+Day 6
+7. Learning to a) use in-built datasets of sklearn b) different ways to plot correlation matrix c) learning about the describe function
