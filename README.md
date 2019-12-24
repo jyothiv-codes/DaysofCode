@@ -19,4 +19,4 @@ Day 5
 Day 6
 7. Learning to a) use in-built datasets of sklearn b) different ways to plot correlation matrix c) learning about the describe function
 
-Day 7 and 8 - 5 problems on codechef (code not uploaded)
+Day 7 and 8 - 5 problems on codechef (code not uploaded) [4 beginner and 1 easy]
