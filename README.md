@@ -23,3 +23,6 @@ Day 7 and 8 - 5 problems on codechef (code not uploaded) [4 beginner and 1 easy]
 
 Day 9 
 Python- Displaying maps using folium module
+
+Day 10
+Python- image processing- example followed is https://www.analyticsvidhya.com/blog/2014/12/image-processing-python-basics/ 
