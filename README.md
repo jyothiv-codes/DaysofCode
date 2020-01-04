@@ -26,3 +26,6 @@ Python- Displaying maps using folium module
 
 Day 10
 Python- image processing- example followed is https://www.analyticsvidhya.com/blog/2014/12/image-processing-python-basics/ 
+
+Day 11
+Coding- 3 medium level questions and 1 easy question on leetcode: Sort colors. Score of parentheses, next greater element and find peak element (code not uploaded)
